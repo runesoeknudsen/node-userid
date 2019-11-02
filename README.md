@@ -8,7 +8,9 @@ Simple nodejs library with native bindings for getting uid and gid information.
 $ npm install userid 
  ```
 
-This relies on GNU getgrname, getgrid, etc and works on POSIX systems only.  Sorry, windows.
+This relies on GNU `getgrname` and `getgrid`.
+Works on POSIX systems only.
+This package is not useful on Windows
 
 ## Usage
 
