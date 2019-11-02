@@ -52,7 +52,7 @@ NAN_METHOD(GroupName)
   struct group *group = NULL;
 
   if ((info.Length() > 0) && info[0]->IsInt32()) {
-    group = getgrgid(info[0]->Int32Value());
+    group = getgrgid(info[0]->Int32Value(Nan::GetCurrentContext()).FromJust());
   } else {
     return Nan::ThrowError("you must supply the gid");
   }
@@ -80,7 +80,7 @@ NAN_METHOD(Gids)
     return Nan::ThrowError("you must supply the groupname");
   }
 
-  String::Utf8Value utfname(info[0]->ToString());
+  v8::String::Utf8Value utfname(info.GetIsolate(), info[0]);
 #ifdef __APPLE__
   groups = new int[ngroups];   // malloc(ngroups * sizeof(gid_t));
 #else // ifdef __APPLE__
@@ -123,7 +123,7 @@ NAN_METHOD(Gid)
   struct group *group = NULL;
 
   if ((info.Length() > 0) && info[0]->IsString()) {
-    String::Utf8Value utfname(info[0]->ToString());
+    v8::String::Utf8Value utfname(info.GetIsolate(), info[0]);
     group = getgrnam(*utfname);
   } else {
     return Nan::ThrowError("you must supply the groupname");
@@ -142,7 +142,7 @@ NAN_METHOD(UserName)
   struct passwd *user = NULL;
 
   if ((info.Length() > 0) && info[0]->IsInt32()) {
-    user = getpwuid(info[0]->Int32Value());
+    user = getpwuid(info[0]->Int32Value(Nan::GetCurrentContext()).FromJust());
   } else {
     return Nan::ThrowError("you must supply the uid");
   }
@@ -160,7 +160,7 @@ NAN_METHOD(Uid)
   struct passwd *user = NULL;
 
   if ((info.Length() > 0) && info[0]->IsString()) {
-    String::Utf8Value utfname(info[0]->ToString());
+    v8::String::Utf8Value utfname(info.GetIsolate(), info[0]);
     user = getpwnam(*utfname);
   } else {
     return Nan::ThrowError("you must supply the username");
