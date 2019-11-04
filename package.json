@@ -4,6 +4,12 @@
   "description": "Lookup uid and gid information in node.js. Uses native POSIX bindings, not processes.",
   "main": "lib/userid.js",
   "types": "lib/userid.d.ts",
+  "files": [
+    "lib/userid.js",
+    "lib/userid.d.ts",
+    "src/userid.cc",
+    "binding.gyp"
+  ],
   "os": [
     "!win32"
   ],
