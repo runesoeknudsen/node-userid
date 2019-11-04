@@ -4,6 +4,9 @@
   "description": "Lookup uid and gid information in node.js. Uses native POSIX bindings, not processes.",
   "main": "lib/userid.js",
   "os": [ "!win32" ],
+  "engines": {
+    "node": "<12"
+  },
   "scripts": {
     "test": "./node_modules/mocha/bin/mocha",
     "install": "node-gyp rebuild"
