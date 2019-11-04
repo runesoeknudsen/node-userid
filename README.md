@@ -10,7 +10,7 @@ $ npm install userid
 
 This relies on GNU `getgrname` and `getgrid`.
 Works on POSIX systems only.
-This package is not useful on Windows
+This package is not useful on Windows.
 
 ## Usage
 
