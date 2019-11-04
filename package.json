@@ -1,6 +1,6 @@
 {
   "name": "userid",
-  "version": "0.4.0",
+  "version": "1.0.0-beta",
   "description": "Lookup uid and gid information in node.js. Uses native POSIX bindings, not processes.",
   "main": "lib/userid.js",
   "types": "lib/userid.d.ts",
@@ -8,7 +8,7 @@
     "!win32"
   ],
   "engines": {
-    "node" : ">=8.4.0"
+    "node": ">=8.4.0"
   },
   "scripts": {
     "test": "./node_modules/mocha/bin/mocha",
