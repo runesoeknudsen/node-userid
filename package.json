@@ -5,6 +5,9 @@
   "main": "lib/userid.js",
   "types": "lib/userid.d.ts",
   "os" : [ "!win32" ],
+  "engines": {
+    "node" : ">=8.4.0"
+  },
   "scripts": {
     "test": "./node_modules/mocha/bin/mocha",
     "install": "node-gyp rebuild"
@@ -21,7 +24,7 @@
   "gypfile": true,
   "dependencies": {
     "bindings": "1.2.1",
-    "nan": "2.5.1"
+    "node-addon-api": "*"
   },
   "devDependencies": {
     "mocha": "^2.2.5",

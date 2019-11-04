@@ -6,7 +6,7 @@
 #include <sys/types.h>
 #include <grp.h>
 #include <pwd.h>
-#include <nan.h>
+#include <napi.h>
 
 #if defined(__unix__) || (defined(__APPLE__) && defined(__MACH__))
  #include <sys/param.h>
@@ -18,165 +18,196 @@
 
 #endif
 
-using v8::FunctionTemplate;
-using v8::Local;
-using v8::Array;
-using v8::String;
-using v8::Number;
-using v8::Object;
+using Napi::Function;
+using Napi::Env;
+using Napi::Array;
+using Napi::String;
+using Napi::Number;
+using Napi::Object;
+using Napi::CallbackInfo;
+using Napi::TypeError;
+using Napi::Error;
 
-NAN_METHOD(Uid);
-NAN_METHOD(UserName);
-NAN_METHOD(GroupName);
-NAN_METHOD(Gid);
-NAN_METHOD(Gids);
-NAN_METHOD(GroupList);
+Object Uid(const CallbackInfo& info);
+String UserName(const CallbackInfo& info);
+String GroupName(const CallbackInfo& info);
+Array Gids(const CallbackInfo& info);
+Number Gid(const CallbackInfo& info);
 
-NAN_MODULE_INIT(Init)
-{
-  Nan::Set(target, Nan::New("uid").ToLocalChecked(),
-           Nan::GetFunction(Nan::New<FunctionTemplate>(Uid)).ToLocalChecked());
-  Nan::Set(target, Nan::New("username").ToLocalChecked(),
-           Nan::GetFunction(Nan::New<FunctionTemplate>(UserName)).ToLocalChecked());
-  Nan::Set(target, Nan::New("gid").ToLocalChecked(),
-           Nan::GetFunction(Nan::New<FunctionTemplate>(Gid)).ToLocalChecked());
-  Nan::Set(target, Nan::New("gids").ToLocalChecked(),
-           Nan::GetFunction(Nan::New<FunctionTemplate>(Gids)).ToLocalChecked());
-  Nan::Set(target, Nan::New("groupname").ToLocalChecked(),
-           Nan::GetFunction(Nan::New<FunctionTemplate>(
-                              GroupName)).ToLocalChecked());
+Object Init(Env env, Object exports) {
+  exports.Set(String::New(env, "uid"), Function::New(env, Uid));
+  exports.Set(String::New(env, "username"), Function::New(env, UserName));
+  exports.Set(String::New(env, "gid"), Function::New(env, Gid));
+  exports.Set(String::New(env, "gids"), Function::New(env, Gids));
+  exports.Set(String::New(env, "groupname"), Function::New(env, GroupName));
+
+  return exports;
 }
 
-NAN_METHOD(GroupName)
+NODE_API_MODULE(NODE_GYP_MODULE_NAME, Init);
+
+String GroupName(const CallbackInfo& info)
 {
-  struct group *group = NULL;
+  auto env = info.Env();
 
-  if ((info.Length() > 0) && info[0]->IsInt32()) {
-    group = getgrgid(info[0]->Int32Value(Nan::GetCurrentContext()).FromJust());
-  } else {
-    return Nan::ThrowError("you must supply the gid");
+  if (info.Length() < 1) {
+    TypeError::New(env, "Wrong number of arguments").ThrowAsJavaScriptException();
+    return String::New(env, "");
   }
 
-  if (group) {
-    info.GetReturnValue().Set(Nan::New(group->gr_name).ToLocalChecked());
-  } else {
-    return Nan::ThrowError("gid not found");
+  if (!info[0].IsNumber()) {
+    TypeError::New(env, "Only number argument is supported for this function").ThrowAsJavaScriptException();
+    return String::New(env, "");
   }
+
+  int gid = info[0].As<Number>().Int32Value();
+  
+  auto group = getgrgid(gid);
+
+  if (!group) {
+    Error::New(env, "gid not found").ThrowAsJavaScriptException();
+    return String::New(env, "");
+  }
+
+  return String::New(env, group->gr_name);
 }
 
-NAN_METHOD(Gids)
+Array Gids(const CallbackInfo& info)
 {
-  int j, ngroups = 4;
+  auto env = info.Env();
 
-#ifdef __APPLE__
-  int *groups;
-#else // ifdef __APPLE__
-  gid_t *groups;
-#endif // ifdef __APPLE__
-  struct passwd *pw;
-  Local<Array>   jsGroups = Nan::New<Array>();
-
-  if (!((info.Length() > 0) && info[0]->IsString())) {
-    return Nan::ThrowError("you must supply the groupname");
+  if (info.Length() < 1) {
+    TypeError::New(env, "Wrong number of arguments").ThrowAsJavaScriptException();
+    return Array::New(env, 0);
   }
 
-  v8::String::Utf8Value utfname(info.GetIsolate(), info[0]);
-#ifdef __APPLE__
-  groups = new int[ngroups];   // malloc(ngroups * sizeof(gid_t));
-#else // ifdef __APPLE__
-  groups = new gid_t[ngroups]; // malloc(ngroups * sizeof(gid_t));
-#endif // ifdef __APPLE__
-
-  if (groups == NULL) {
-    return Nan::ThrowError("generating groups: ");
+  if (!info[0].IsString()) {
+    TypeError::New(env, "Only string argument is supported for this function").ThrowAsJavaScriptException();
+    return Array::New(env, 0);
   }
 
-  pw = getpwnam(*utfname);
+  auto username = std::string(info[0].As<String>()).c_str();
+
+  struct passwd *pw = getpwnam(username);
 
   if (pw == NULL) {
-    return Nan::ThrowError("getpwnam");
+    Error::New(env, "getpwnam").ThrowAsJavaScriptException();
+    return Array::New(env, 0);
   }
 
-  if (getgrouplist(*utfname, pw->pw_gid, groups, &ngroups) == -1) {
-    delete[] groups;
 #ifdef __APPLE__
-    groups = new int[ngroups];
+  typedef int gidType;
 #else // ifdef __APPLE__
-    groups = new gid_t[ngroups];
+  typedef gid_t gidType;
 #endif // ifdef __APPLE__
 
-    if (getgrouplist(*utfname, pw->pw_gid, groups, &ngroups) == -1) {
-      return Nan::ThrowError("getgrouplist");
-    }
-  }
+  gidType *groups = NULL;
 
-  for (j = 0; j < ngroups; j++) {
-    Nan::Set(jsGroups, j, Nan::New(groups[j]));
+  int foundGroups;
+  int ngroups = 4;
+
+  do {
+    // It is safe to delete NULL on first run
+    delete[] groups;
+    
+    // Make our list of groups bigger by 4 at a time
+    ngroups *= 2;
+
+    groups = new gidType[ngroups];
+
+    if (groups == NULL) {
+      Error::New(env, "Malloc error generating list of groups").ThrowAsJavaScriptException();
+      return Array::New(env, 0);
+    }
+
+    foundGroups = getgrouplist(username, pw->pw_gid, groups, &ngroups);
+
+    // getgrouplist forces us to guess how many groups the user might be in
+    // returns `-1` if we guessed too low
+  } while (foundGroups == -1);
+
+  auto ret = Array::New(env, foundGroups);
+
+  for (int i = 0; i < ngroups; i++) {
+    // TODO: What happens when `napi_value`s are assigned to an array? Do their allocations need to stay around?
+    ret[uint32_t(i)] = Number::New(env, groups[i]);
   }
 
   delete[] groups;
-  info.GetReturnValue().Set(jsGroups);
+
+  return ret;
 }
 
-NAN_METHOD(Gid)
+Number Gid(const CallbackInfo& info)
 {
+  auto env = info.Env();
+  
   struct group *group = NULL;
 
-  if ((info.Length() > 0) && info[0]->IsString()) {
-    v8::String::Utf8Value utfname(info.GetIsolate(), info[0]);
-    group = getgrnam(*utfname);
+  if ((info.Length() > 0) && info[0].IsString()) {
+    auto utfname = std::string(info[0].As<String>()).c_str();
+
+    group = getgrnam(utfname);
   } else {
-    return Nan::ThrowError("you must supply the groupname");
+    Error::New(env, "you must supply the groupname").ThrowAsJavaScriptException();
+    return Number::New(env, 0);
   }
 
 
   if (group) {
-    info.GetReturnValue().Set(group->gr_gid);
+    return Number::New(env, group->gr_gid);
   } else {
-    return Nan::ThrowError("groupname not found");
+    Error::New(env, "groupname not found").ThrowAsJavaScriptException();
+    return Number::New(env, 0);
   }
 }
 
-NAN_METHOD(UserName)
+String UserName(const CallbackInfo& info)
 {
+  auto env = info.Env();
+
   struct passwd *user = NULL;
 
-  if ((info.Length() > 0) && info[0]->IsInt32()) {
-    user = getpwuid(info[0]->Int32Value(Nan::GetCurrentContext()).FromJust());
+  if ((info.Length() > 0) && info[0].IsNumber()) {
+    user = getpwuid(info[0].As<Number>().Int32Value());
   } else {
-    return Nan::ThrowError("you must supply the uid");
+    Error::New(env, "you must supply the uid").ThrowAsJavaScriptException();
+    return String::New(env, "");
   }
 
 
   if (user) {
-    info.GetReturnValue().Set(Nan::New(user->pw_name).ToLocalChecked());
+    return String::New(env, user->pw_name);
   } else {
-    return Nan::ThrowError("uid not found");
+    Error::New(env, "uid not found").ThrowAsJavaScriptException();
+    return String::New(env, "");
   }
 }
 
-NAN_METHOD(Uid)
+Object Uid(const CallbackInfo& info)
 {
+  auto env = info.Env();
+
   struct passwd *user = NULL;
 
-  if ((info.Length() > 0) && info[0]->IsString()) {
-    v8::String::Utf8Value utfname(info.GetIsolate(), info[0]);
-    user = getpwnam(*utfname);
+  if ((info.Length() > 0) && info[0].IsString()) {
+    auto utfname = std::string(info[0].As<String>()).c_str();
+    user = getpwnam(utfname);
   } else {
-    return Nan::ThrowError("you must supply the username");
+    Error::New(env, "you must supply the username").ThrowAsJavaScriptException();
+    return Object::New(env);
   }
 
 
   if (user) {
-    Local<Object> obj = Nan::New<Object>();
+    auto ret = Object::New(env);
+    
+    ret["uid"] = Number::New(env, user->pw_uid);
+    ret["gid"] = Number::New(env, user->pw_gid);
 
-    Nan::Set(obj, Nan::New("uid").ToLocalChecked(), Nan::New(user->pw_uid));
-    Nan::Set(obj, Nan::New("gid").ToLocalChecked(), Nan::New(user->pw_gid));
-
-    info.GetReturnValue().Set(obj);
+    return ret;
   } else {
-    return Nan::ThrowError("username not found");
+    Error::New(env, "username not found").ThrowAsJavaScriptException();
+    return Object::New(env);
   }
 }
-
-NODE_MODULE(userid, Init);
