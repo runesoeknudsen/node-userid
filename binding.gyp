@@ -22,7 +22,7 @@
               "GCC_SYMBOLS_PRIVATE_EXTERN": "YES", # -fvisibility=hidden
             },
         }],
-      ]
+      ],
     },
   ],
 }
