@@ -18,7 +18,7 @@
   },
   "scripts": {
     "test": "./node_modules/mocha/bin/mocha",
-    "install": "node-gyp build"
+    "install": "node-gyp rebuild"
   },
   "repository": {
     "type": "git",
