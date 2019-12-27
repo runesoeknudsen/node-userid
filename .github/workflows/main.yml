@@ -1,0 +1,33 @@
+name: Main
+
+on: [push]
+
+jobs:
+  build-test-publish:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ ubuntu-latest ] # macos requires updates to tests
+        node: [ 6, 7, 8, 9, 10, 11, 12, 13 ] # Does not work on pre 1.0 versions. Mocha does not work on 4/5
+
+    runs-on: ${{ matrix.os }}
+
+    name: Build Test on ${{ matrix.os }} with Node ${{ matrix.node }}
+
+    steps:
+      - name: Checkout latest code
+        uses: actions/checkout@v1
+
+      - name: Install Node ${{ matrix.node }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: Check Node version
+        run: node --version
+
+      - name: Build
+        run: npm install
+
+      - name: Test
+        run: npm test
