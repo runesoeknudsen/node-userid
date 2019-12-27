@@ -4,17 +4,21 @@ on: [push]
 
 jobs:
   build-test-publish:
-    name: Build Test
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: [ 6, 8, 10, 12, 'latest' ]
+
+    name: Build Test on Node ${{ matrix.node }}
 
     steps:
       - name: Checkout latest code
         uses: actions/checkout@v1
 
-      - name: Install Node 13
+      - name: Install Node ${{ matrix.node }}
         uses: actions/setup-node@v1
         with:
-          node-version: 13
+          node-version: ${{ matrix.node }}
 
       - name: Check Node version
         run: node --version
