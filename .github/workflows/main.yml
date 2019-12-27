@@ -7,8 +7,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ ubuntu-latest ]
-        node: [ '0.10', '0.12', 4, 5, 6, 7, 8, 9, 10, 11, 12, 13 ]
+        os: [ ubuntu-latest ] # macos requires updates to tests
+        node: [ 4, 5, 6, 7, 8, 9, 10, 11, 12, 13 ] # Does not work on pre 1.0 versions
 
     runs-on: ${{ matrix.os }}
 
