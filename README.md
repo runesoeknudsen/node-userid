@@ -2,6 +2,8 @@
 
 Simple nodejs library with native bindings for getting uid and gid information.  
 
+[![](https://github.com/cinderblock/node-userid/workflows/Main/badge.svg)](https://github.com/cinderblock/node-userid/actions)
+
 ## Installation
 
 ```
