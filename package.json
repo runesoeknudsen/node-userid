@@ -17,8 +17,9 @@
     "node": ">=8.4.0"
   },
   "scripts": {
-    "test": "./node_modules/mocha/bin/mocha",
-    "install": "node-gyp rebuild"
+    "test": "mocha",
+    "install": "npm run build",
+    "build": "node-gyp rebuild"
   },
   "repository": {
     "type": "git",
@@ -31,11 +32,11 @@
   "license": "MIT",
   "gypfile": true,
   "dependencies": {
-    "bindings": "1.2.1",
-    "node-addon-api": "*"
+    "bindings": "^1.5.0",
+    "node-addon-api": "^2.0.0"
   },
   "devDependencies": {
-    "mocha": "^2.2.5",
-    "should": "^7.1.0"
+    "mocha": "^6.2.2",
+    "should": "^7.1.1"
   }
 }
