@@ -16,5 +16,8 @@ jobs:
         with:
           node-version: 13
 
+      - name: Check Node version
+        run: node --version
+
       - name: Build
         run: npm install
