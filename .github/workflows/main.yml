@@ -23,7 +23,7 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
 
-      - name: Check Node version
+      - name: Print Node version
         run: node --version
 
       - name: Build
