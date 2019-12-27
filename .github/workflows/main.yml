@@ -6,7 +6,7 @@ jobs:
   build-test-publish:
     strategy:
       matrix:
-        os: [ macos-latest, ubuntu-latest ]
+        os: [ ubuntu-latest ]
         node: [ 6, 7, 8, 9, 10, 11, 12, 13 ]
 
     runs-on: ${{ matrix.os }}
