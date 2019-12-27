@@ -5,6 +5,7 @@ on: [push]
 jobs:
   build-test-publish:
     strategy:
+      fail-fast: false
       matrix:
         os: [ ubuntu-latest ]
         node: [ '0.10', '0.12', 4, 5, 6, 7, 8, 9, 10, 11, 12, 13 ]
