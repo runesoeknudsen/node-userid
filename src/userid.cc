@@ -44,7 +44,7 @@ Object Init(Env env, Object exports) {
   return exports;
 }
 
-NAPI_MODULE(NODE_GYP_MODULE_NAME, Init)
+NODE_API_MODULE(NODE_GYP_MODULE_NAME, Init);
 
 String GroupName(const CallbackInfo& info)
 {
