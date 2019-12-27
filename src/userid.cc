@@ -9,30 +9,30 @@
 #include <napi.h>
 
 #if defined(__unix__) || (defined(__APPLE__) && defined(__MACH__))
- #include <sys/param.h>
+#include <sys/param.h>
 
- // BSD needs unistd.h for getgrouplist function
- #if defined(BSD)
-  #include <unistd.h>
- #endif
+// BSD needs unistd.h for getgrouplist function
+#if defined(BSD)
+#include <unistd.h>
+#endif
 
 #endif
 
-using Napi::Function;
-using Napi::Env;
 using Napi::Array;
-using Napi::String;
+using Napi::CallbackInfo;
+using Napi::Env;
+using Napi::Error;
+using Napi::Function;
 using Napi::Number;
 using Napi::Object;
-using Napi::CallbackInfo;
+using Napi::String;
 using Napi::TypeError;
-using Napi::Error;
 
-Object Uid(const CallbackInfo& info);
-String UserName(const CallbackInfo& info);
-String GroupName(const CallbackInfo& info);
-Array Gids(const CallbackInfo& info);
-Number Gid(const CallbackInfo& info);
+Object Uid(const CallbackInfo &info);
+String UserName(const CallbackInfo &info);
+String GroupName(const CallbackInfo &info);
+Array Gids(const CallbackInfo &info);
+Number Gid(const CallbackInfo &info);
 
 Object Init(Env env, Object exports) {
   exports.Set(String::New(env, "uid"), Function::New(env, Uid));
@@ -46,7 +46,7 @@ Object Init(Env env, Object exports) {
 
 NODE_API_MODULE(NODE_GYP_MODULE_NAME, Init);
 
-String GroupName(const CallbackInfo& info)
+String GroupName(const CallbackInfo &info)
 {
   auto env = info.Env();
 
@@ -72,7 +72,7 @@ String GroupName(const CallbackInfo& info)
   return String::New(env, group->gr_name);
 }
 
-Array Gids(const CallbackInfo& info)
+Array Gids(const CallbackInfo &info)
 {
   auto env = info.Env();
 
@@ -97,7 +97,7 @@ Array Gids(const CallbackInfo& info)
 
 #ifdef __APPLE__
   typedef int gidType;
-#else // ifdef __APPLE__
+#else  // ifdef __APPLE__
   typedef gid_t gidType;
 #endif // ifdef __APPLE__
 
@@ -109,7 +109,7 @@ Array Gids(const CallbackInfo& info)
   do {
     // It is safe to delete NULL on first run
     delete[] groups;
-    
+
     // Make our list of groups bigger by 4 at a time
     ngroups *= 2;
 
@@ -138,10 +138,10 @@ Array Gids(const CallbackInfo& info)
   return ret;
 }
 
-Number Gid(const CallbackInfo& info)
+Number Gid(const CallbackInfo &info)
 {
   auto env = info.Env();
-  
+
   struct group *group = NULL;
 
   if ((info.Length() > 0) && info[0].IsString()) {
@@ -162,7 +162,7 @@ Number Gid(const CallbackInfo& info)
   }
 }
 
-String UserName(const CallbackInfo& info)
+String UserName(const CallbackInfo &info)
 {
   auto env = info.Env();
 
@@ -184,7 +184,7 @@ String UserName(const CallbackInfo& info)
   }
 }
 
-Object Uid(const CallbackInfo& info)
+Object Uid(const CallbackInfo &info)
 {
   auto env = info.Env();
 
@@ -201,7 +201,7 @@ Object Uid(const CallbackInfo& info)
 
   if (user) {
     auto ret = Object::New(env);
-    
+
     ret["uid"] = Number::New(env, user->pw_uid);
     ret["gid"] = Number::New(env, user->pw_gid);
 

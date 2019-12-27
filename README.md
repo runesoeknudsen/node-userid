@@ -1,14 +1,14 @@
-# userid 
+# userid
 
-Simple nodejs library with native bindings for getting uid and gid information.  
+Simple nodejs library with native bindings for getting uid and gid information.
 
 [![](https://github.com/cinderblock/node-userid/workflows/Main/badge.svg)](https://github.com/cinderblock/node-userid/actions)
 
 ## Installation
 
 ```
-$ npm install userid 
- ```
+$ npm install userid
+```
 
 This relies on GNU `getgrname` and `getgrid`.
 Works on POSIX systems only.
@@ -19,8 +19,7 @@ This package is not useful on Windows.
 ### Example
 
 ```js
-
-var userid = require('userid');
+var userid = require("userid");
 
 // get user id
 console.log("root's uid is:", userid.uid("root"));
@@ -31,9 +30,8 @@ console.log("wheel's gid is:", userid.gid("wheel"));
 // get user name
 console.log("uid 0 name is:", userid.username(0));
 
-// get group name 
+// get group name
 console.log("gid 0 name is:", userid.groupname(0));
-
 ```
 
 ## License
@@ -47,10 +45,8 @@ the Free Software Foundation, either version 3 of the License, or
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-
+along with this program. If not, see <http://www.gnu.org/licenses/>.

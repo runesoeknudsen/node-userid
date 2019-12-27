@@ -6,7 +6,7 @@
  * @return {Object} object with uid and gid, e.g. { uid: 1, gid: 2 }
  *
  */
-export declare function ids(username: string): {uid: number, gid: number};
+export declare function ids(username: string): { uid: number; gid: number };
 
 /**
  * Get uid for user.
