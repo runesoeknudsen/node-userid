@@ -18,34 +18,7 @@
 
 #endif
 
-using Napi::Array;
-using Napi::CallbackInfo;
-using Napi::Env;
-using Napi::Error;
-using Napi::Function;
-using Napi::Number;
-using Napi::Object;
-using Napi::String;
-using Napi::TypeError;
-
-Object Uid(const CallbackInfo &info);
-String UserName(const CallbackInfo &info);
-String GroupName(const CallbackInfo &info);
-Array Gids(const CallbackInfo &info);
-Number Gid(const CallbackInfo &info);
-
-Object Init(Env env, Object exports)
-{
-  exports.Set(String::New(env, "uid"), Function::New(env, Uid));
-  exports.Set(String::New(env, "username"), Function::New(env, UserName));
-  exports.Set(String::New(env, "gid"), Function::New(env, Gid));
-  exports.Set(String::New(env, "gids"), Function::New(env, Gids));
-  exports.Set(String::New(env, "groupname"), Function::New(env, GroupName));
-
-  return exports;
-}
-
-NODE_API_MODULE(NODE_GYP_MODULE_NAME, Init);
+using namespace Napi;
 
 String GroupName(const CallbackInfo &info)
 {
@@ -238,3 +211,16 @@ Object Uid(const CallbackInfo &info)
     return Object::New(env);
   }
 }
+
+Object Init(Env env, Object exports)
+{
+  exports["uid"] = Function::New(env, &Uid);
+  exports["username"] = Function::New(env, &UserName);
+  exports["gid"] = Function::New(env, &Gid);
+  exports["gids"] = Function::New(env, &Gids);
+  exports["groupname"] = Function::New(env, &GroupName);
+
+  return exports;
+}
+
+NODE_API_MODULE(NODE_GYP_MODULE_NAME, Init);
