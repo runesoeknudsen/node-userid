@@ -29,7 +29,7 @@ function testErrors(test, type, missing, error, options = {}) {
     (() => test()).should.throw("Wrong number of arguments");
   });
 
-  it(`should throw with the wrong type of argument. Expects ${type}, giving [${badValue}].`, () => {
+  it(`should throw with the wrong type of argument. Expects ${type}, giving [${options.badValue}].`, () => {
     (() => test(options.badValue)).should.throw(`Argument must be a ${type}`);
   });
 
