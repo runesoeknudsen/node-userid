@@ -13,6 +13,7 @@
       "lcov",
       "lgcov",
       "libc",
+      "macOS",
       "msvs",
       "npmjs",
       "npmrc",

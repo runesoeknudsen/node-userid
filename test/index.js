@@ -20,12 +20,16 @@ const shellGids = execToString("id -G")
   .map(s => +s)
   .sort();
 
+const nonExistentUidGid = -42;
+const nonExistentUserGroup = "";
+
 function testErrors(test, type, missing, error, options = {}) {
   if (options.badValue === undefined)
     options.badValue = type == "string" ? 0 : "not a number";
 
   if (options.missingValue === undefined)
-    options.missingValue = type == "string" ? "" : -1;
+    options.missingValue =
+      type == "string" ? nonExistentUserGroup : nonExistentUidGid;
 
   it("should throw with too few arguments", () => {
     (() => test()).should.throw("Wrong number of arguments");
