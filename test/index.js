@@ -1,6 +1,8 @@
 require("should");
-const userid = require("../lib/userid.js");
+
 const execSync = require("child_process").execSync;
+
+const userid = require(process.env.MOCHA_IMPORT_OVERRIDE || "../lib/userid.js");
 
 // Utility functions
 

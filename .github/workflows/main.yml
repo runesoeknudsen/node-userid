@@ -40,10 +40,42 @@ jobs:
         # Mocha does not work on 4/5
         if: matrix.node >= 6
 
+  install-from-git:
+    name: Install from Github Test
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout latest code
+        uses: actions/checkout@v1
+
+      - name: Install Node dependencies
+        run: npm install
+
+      # Prepare Test Environment
+
+      - name: Create Dummy Package.json
+        run: echo \{\} > test/package.json
+
+      - name: Install Current Version as Git Dependency
+        working-directory: test
+        run: npm install ${{ github.repository }}#${{ github.sha }}
+
+      - name: "Debug: List Dependency Folder Contents"
+        working-directory: test
+        run: find node_modules/userid -type f -print
+
+      # Ensure the code works
+
+      - name: Run Tests with Prepared Git Dependency
+        run: npm test
+        env:
+          MOCHA_IMPORT_OVERRIDE: userid
+
   coverage:
     name: Test Coverage
     runs-on: ubuntu-latest
-    needs: [test-matrix]
+    needs: [test-matrix, install-from-git]
 
     steps:
       - name: Checkout latest code
@@ -100,7 +132,7 @@ jobs:
     name: Publish Master
     if: github.event_name == 'push' && github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
-    needs: [coverage, test-matrix]
+    needs: [coverage, test-matrix, install-from-git]
 
     steps:
       - name: Checkout latest code
