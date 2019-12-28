@@ -96,14 +96,14 @@ Array userid::Gids(const CallbackInfo &info)
   typedef gid_t gidType;
 #endif // ifdef __APPLE__
 
-  gidType *groups = NULL;
+  gidType *groups = nullptr;
 
   int foundGroups;
   int ngroups = 4;
 
   do
   {
-    // It is safe to delete NULL on first run
+    // It is safe to delete nullptr on first run
     delete[] groups;
 
     // Make our list of groups bigger by 4 at a time
@@ -111,7 +111,7 @@ Array userid::Gids(const CallbackInfo &info)
 
     groups = new gidType[ngroups];
 
-    if (groups == NULL)
+    if (!groups)
     {
       Error::New(env, "Malloc error generating list of groups").ThrowAsJavaScriptException();
       return Array::New(env, 0);
