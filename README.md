@@ -37,8 +37,11 @@ console.log("uid 0 name is:", userid.username(0));
 console.log("gid 0 name is:", userid.groupname(0));
 ```
 
-## License
+<!-- TODO: Full Docs -->
 
+## License, unless otherwise specified
+
+Copyright (C) 2019 Cameron Tacklind <cameron@tacklind.com>
 Copyright (C) 2013 Jen Andre <jandre@gmail.com>
 
 This program is free software: you can redistribute it and/or modify
