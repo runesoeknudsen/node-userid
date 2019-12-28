@@ -73,6 +73,10 @@ describe("userid", function() {
 
       libGroupName.should.equal(groupName);
     });
+
+    it("should throw with the wrong of arguments", function() {
+      (() => userid.groupname()).should.throw("Wrong number of arguments")
+    });
   });
 
   describe("userid.gids", function() {
