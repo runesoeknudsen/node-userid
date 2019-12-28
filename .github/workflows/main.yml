@@ -78,10 +78,10 @@ jobs:
 
       - name: Lcov Capture Gcov Data
         run: lcov --capture --directory . --output-file coverage/cc.info
-      
+
       - name: Extract userid.cc Coverage Data
         run: lcov --extract coverage/cc.info '*userid.cc' --output-file coverage/cc.info
-      
+
       - name: Combine userid.cc Coverage Data with JavaScript Coverage Data
         run: lcov --add-tracefile coverage/cc.info --add-tracefile coverage/lcov.info --output-file coverage/lcov.info
 
@@ -94,7 +94,7 @@ jobs:
     name: Publish Master
     if: github.event_name == 'push' && github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
-    needs: [ coverage, test-matrix ]
+    needs: [coverage, test-matrix]
 
     steps:
       - name: Checkout latest code
