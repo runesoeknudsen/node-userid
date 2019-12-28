@@ -25,7 +25,7 @@ describe("userid", function() {
   describe("userid.ids", function() {
     const test = userid.ids;
 
-    it("should load current user's uid and gid", function() {
+    it(`should load a user's uid [${shellUid}] and gid [${shellGid}] by username [${shellUsername}]`, function() {
       var libIds = test(shellUsername);
 
       libIds.uid.should.equal(shellUid);
@@ -47,7 +47,7 @@ describe("userid", function() {
 
   describe("userid.uid", function() {
     const test = userid.uid;
-    it("should load current user's uid", function() {
+    it(`should load user's uid [${shellUid}] by username [${shellUsername}]`, function() {
       test(shellUsername).should.equal(shellUid);
     });
   });
@@ -55,7 +55,7 @@ describe("userid", function() {
   describe("userid.username", function() {
     const test = userid.username;
 
-    it("should load username of specified uid", function() {
+    it(`should load a username [${shellUsername}] by uid [${shellUid}]`, function() {
       test(shellUid).should.equal(shellUsername);
     });
 
@@ -75,7 +75,7 @@ describe("userid", function() {
   describe("userid.gid", function() {
     const test = userid.gid;
 
-    it("should load a group's gid by name", function() {
+    it(`should load a group's gid [${shellGid}] by name [${shellGroupName}]`, function() {
       test(shellGroupName).should.equal(shellGid);
     });
 
@@ -87,7 +87,7 @@ describe("userid", function() {
       (() => test(0)).should.throw("Argument must be a string");
     });
 
-    it("should throw when gid can't be found", function() {
+    it("should throw when groupname can't be found", function() {
       (() => test("")).should.throw("groupname not found");
     });
   });
@@ -95,7 +95,7 @@ describe("userid", function() {
   describe("userid.groupname", function() {
     const test = userid.groupname;
 
-    it("should load a group's name by gid", function() {
+    it(`should load a group's name [${shellGroupName}] by gid [${shellGid}]`, function() {
       test(shellGid).should.equal(shellGroupName);
     });
 
@@ -115,7 +115,7 @@ describe("userid", function() {
   describe("userid.gids", function() {
     const test = userid.gids;
 
-    it("should work like shell command", function() {
+    it(`should load a list of gids [${shellGids}] by username [${shellUsername}]`, function() {
       test(shellUsername)
         .sort()
         .should.deepEqual(shellGids);
