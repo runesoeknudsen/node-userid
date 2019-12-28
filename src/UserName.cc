@@ -31,8 +31,6 @@ String userid::UserName(const CallbackInfo &info)
 {
   auto env = info.Env();
 
-  struct passwd *user = NULL;
-
   if (info.Length() < 1)
   {
     TypeError::New(env, "Wrong number of arguments").ThrowAsJavaScriptException();
