@@ -11,5 +11,5 @@ String GroupName(const CallbackInfo &info);
 Array Gids(const CallbackInfo &info);
 Number Gid(const CallbackInfo &info);
 String UserName(const CallbackInfo &info);
-Object Uid(const CallbackInfo &info);
+Object Ids(const CallbackInfo &info);
 } // namespace userid

@@ -8,7 +8,7 @@ using namespace userid;
 
 Object Init(Env env, Object exports)
 {
-  exports["uid"] = Function::New(env, &Uid);
+  exports["ids"] = Function::New(env, &Ids);
   exports["gid"] = Function::New(env, &Gid);
   exports["gids"] = Function::New(env, &Gids);
   exports["username"] = Function::New(env, &UserName);
