@@ -18,19 +18,23 @@ const shellGids = execToString("id -G")
   .map(s => +s)
   .sort();
 
-function testErrors(test, type, missing, error) {
+function testErrors(test, type, missing, error, options = {}) {
+  if (options.badValue === undefined)
+    options.badValue = type == "string" ? 0 : "not a number";
+
+  if (options.missingValue === undefined)
+    options.missingValue = type == "string" ? "" : -1;
+
   it("should throw with too few arguments", () => {
     (() => test()).should.throw("Wrong number of arguments");
   });
 
-  it("should throw with the wrong type of arguments", () => {
-    (() => test(type == "string" ? 0 : "not a number")).should.throw(
-      `Argument must be a ${type}`
-    );
+  it(`should throw with the wrong type of argument. Expects ${type}, giving [${badValue}].`, () => {
+    (() => test(options.badValue)).should.throw(`Argument must be a ${type}`);
   });
 
-  it(`should throw when ${missing} can't be found`, () => {
-    (() => test(type == "string" ? "" : -1)).should.throw(error);
+  it(`should throw when ${missing} [${options.missingValue}] can't be found`, () => {
+    (() => test(options.missingValue)).should.throw(error);
   });
 }
 
