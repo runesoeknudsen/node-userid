@@ -23,11 +23,25 @@ var shellGids = execToString("id -G")
 
 describe("userid", function() {
   describe("userid.ids", function() {
+    const test = userid.ids;
+    
     it("should load current user's uid and gid", function() {
-      var libIds = userid.ids(shellUsername);
+      var libIds = test(shellUsername);
 
       libIds.uid.should.equal(shellUid);
       libIds.gid.should.equal(shellGid);
+    });
+
+    it("should throw with too few arguments", function() {
+      (() => test()).should.throw("Wrong number of arguments");
+    });
+
+    it("should throw with the wrong type of arguments", function() {
+      (() => test(0)).should.throw("Argument must be a string");
+    });
+
+    it("should throw when username can't be found", function() {
+      (() => test("")).should.throw("username not found");
     });
   });
 
