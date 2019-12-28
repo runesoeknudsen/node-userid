@@ -1,136 +1,100 @@
-var should = require("should");
-var userid = require("../lib/userid.js");
-var execSync = require("child_process").execSync;
+const should = require("should");
+const userid = require("../lib/userid.js");
+const execSync = require("child_process").execSync;
 
-var execToString = function(command) {
-  return execSync(command)
+const execToString = command =>
+  execSync(command)
     .toString()
     .replace("\n", "");
-};
 
-var execToVal = function(command) {
-  return execSync(command) >> 0;
-};
+const execToVal = command => +execSync(command);
 
-var shellUsername = execToString("id -u -n");
-var shellGid = execToVal("id -g");
-var shellUid = execToVal("id -u");
-var shellGroupName = execToString(`getent group ${shellGid} | cut -d: -f1`);
-var shellGids = execToString("id -G")
+const shellUsername = execToString("id -un");
+const shellGroupName = execToString("id -gn");
+const shellUid = execToVal("id -u");
+const shellGid = execToVal("id -g");
+const shellGids = execToString("id -G")
   .split(" ")
   .map(s => +s)
   .sort();
 
-describe("userid", function() {
-  describe("userid.ids", function() {
+function testErrors(test, type, missing, error) {
+  it("should throw with too few arguments", () => {
+    (() => test()).should.throw("Wrong number of arguments");
+  });
+
+  it("should throw with the wrong type of arguments", () => {
+    (() => test(type == "string" ? 0 : "not a number")).should.throw(
+      `Argument must be a ${type}`
+    );
+  });
+
+  it(`should throw when ${missing} can't be found`, () => {
+    (() => test(type == "string" ? "" : -1)).should.throw(error);
+  });
+}
+
+describe("userid", () => {
+  describe("userid.ids", () => {
     const test = userid.ids;
 
-    it(`should load a user's uid [${shellUid}] and gid [${shellGid}] by username [${shellUsername}]`, function() {
-      var libIds = test(shellUsername);
+    it(`should load a user's uid [${shellUid}] and gid [${shellGid}] by username [${shellUsername}]`, () => {
+      const libIds = test(shellUsername);
 
       libIds.uid.should.equal(shellUid);
       libIds.gid.should.equal(shellGid);
     });
 
-    it("should throw with too few arguments", function() {
-      (() => test()).should.throw("Wrong number of arguments");
-    });
-
-    it("should throw with the wrong type of arguments", function() {
-      (() => test(0)).should.throw("Argument must be a string");
-    });
-
-    it("should throw when username can't be found", function() {
-      (() => test("")).should.throw("username not found");
-    });
+    testErrors(test, "string", "username", "username not found");
   });
 
-  describe("userid.uid", function() {
+  describe("userid.uid", () => {
     const test = userid.uid;
-    it(`should load user's uid [${shellUid}] by username [${shellUsername}]`, function() {
+
+    it(`should load user's uid [${shellUid}] by username [${shellUsername}]`, () => {
       test(shellUsername).should.equal(shellUid);
     });
   });
 
-  describe("userid.username", function() {
+  describe("userid.username", () => {
     const test = userid.username;
 
-    it(`should load a username [${shellUsername}] by uid [${shellUid}]`, function() {
+    it(`should load a username [${shellUsername}] by uid [${shellUid}]`, () => {
       test(shellUid).should.equal(shellUsername);
     });
 
-    it("should throw with too few arguments", function() {
-      (() => test()).should.throw("Wrong number of arguments");
-    });
-
-    it("should throw with the wrong type of arguments", function() {
-      (() => test("not a number")).should.throw("Argument must be a number");
-    });
-
-    it("should throw when uid can't be found", function() {
-      (() => test(-1)).should.throw("uid not found");
-    });
+    testErrors(test, "number", "uid", "uid not found");
   });
 
-  describe("userid.gid", function() {
+  describe("userid.gid", () => {
     const test = userid.gid;
 
-    it(`should load a group's gid [${shellGid}] by name [${shellGroupName}]`, function() {
+    it(`should load a group's gid [${shellGid}] by name [${shellGroupName}]`, () => {
       test(shellGroupName).should.equal(shellGid);
     });
 
-    it("should throw with too few arguments", function() {
-      (() => test()).should.throw("Wrong number of arguments");
-    });
-
-    it("should throw with the wrong type of arguments", function() {
-      (() => test(0)).should.throw("Argument must be a string");
-    });
-
-    it("should throw when groupname can't be found", function() {
-      (() => test("")).should.throw("groupname not found");
-    });
+    testErrors(test, "string", "groupname", "groupname not found");
   });
 
-  describe("userid.groupname", function() {
+  describe("userid.groupname", () => {
     const test = userid.groupname;
 
-    it(`should load a group's name [${shellGroupName}] by gid [${shellGid}]`, function() {
+    it(`should load a group's name [${shellGroupName}] by gid [${shellGid}]`, () => {
       test(shellGid).should.equal(shellGroupName);
     });
 
-    it("should throw with too few arguments", function() {
-      (() => test()).should.throw("Wrong number of arguments");
-    });
-
-    it("should throw with the wrong type of arguments", function() {
-      (() => test("not a number")).should.throw("Argument must be a number");
-    });
-
-    it("should throw when gid can't be found", function() {
-      (() => test(-1)).should.throw("gid not found");
-    });
+    testErrors(test, "number", "gid", "gid not found")
   });
 
-  describe("userid.gids", function() {
+  describe("userid.gids", () => {
     const test = userid.gids;
 
-    it(`should load a list of gids [${shellGids}] by username [${shellUsername}]`, function() {
+    it(`should load a list of gids [${shellGids}] by username [${shellUsername}]`, () => {
       test(shellUsername)
         .sort()
         .should.deepEqual(shellGids);
     });
 
-    it("should throw with too few arguments", function() {
-      (() => test()).should.throw("Wrong number of arguments");
-    });
-
-    it("should throw with the wrong type of arguments", function() {
-      (() => test(0)).should.throw("Argument must be a string");
-    });
-
-    it("should throw when group can't be found", function() {
-      (() => test("")).should.throw("getpwnam");
-    });
+    testErrors(test, "string", "user", "getpwnam")
   });
 });
