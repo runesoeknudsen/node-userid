@@ -1,4 +1,4 @@
-const should = require("should");
+require("should");
 const userid = require("../lib/userid.js");
 const execSync = require("child_process").execSync;
 
