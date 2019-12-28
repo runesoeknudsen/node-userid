@@ -65,6 +65,12 @@ describe("userid", function() {
     it("should throw with too few arguments", function() {
       (() => userid.groupname()).should.throw("Wrong number of arguments");
     });
+
+    it("should throw with the wrong type of arguments", function() {
+      (() => userid.groupname("not a number")).should.throw(
+        "Only number argument is supported for this function"
+      );
+    });
   });
 
   describe("userid.gids", function() {
