@@ -127,29 +127,29 @@ Number Gid(const CallbackInfo &info)
 {
   auto env = info.Env();
 
-  struct group *group = NULL;
-
-  if ((info.Length() > 0) && info[0].IsString())
+  if (info.Length() < 1)
   {
-    auto utfname = std::string(info[0].As<String>()).c_str();
-
-    group = getgrnam(utfname);
-  }
-  else
-  {
-    Error::New(env, "you must supply the groupname").ThrowAsJavaScriptException();
-    return Number::New(env, 0);
+    TypeError::New(env, "Wrong number of arguments").ThrowAsJavaScriptException();
+    return Array::New(env, 0);
   }
 
-  if (group)
+  if (!info[0].IsString())
   {
-    return Number::New(env, group->gr_gid);
+    TypeError::New(env, "Argument must be a string").ThrowAsJavaScriptException();
+    return Array::New(env, 0);
   }
-  else
+
+  auto utfname = std::string(info[0].As<String>()).c_str();
+
+  auto group = getgrnam(utfname);
+
+  if (!group)
   {
     Error::New(env, "groupname not found").ThrowAsJavaScriptException();
     return Number::New(env, 0);
   }
+
+  return Number::New(env, group->gr_gid);
 }
 
 String UserName(const CallbackInfo &info)
@@ -158,58 +158,60 @@ String UserName(const CallbackInfo &info)
 
   struct passwd *user = NULL;
 
-  if ((info.Length() > 0) && info[0].IsNumber())
+  if (info.Length() < 1)
   {
-    user = getpwuid(info[0].As<Number>().Int32Value());
-  }
-  else
-  {
-    Error::New(env, "you must supply the uid").ThrowAsJavaScriptException();
-    return String::New(env, "");
+    TypeError::New(env, "Wrong number of arguments").ThrowAsJavaScriptException();
+    return Array::New(env, 0);
   }
 
-  if (user)
+  if (!info[0].IsNumber())
   {
-    return String::New(env, user->pw_name);
+    TypeError::New(env, "Argument must be a number").ThrowAsJavaScriptException();
+    return Array::New(env, 0);
   }
-  else
+
+  auto user = getpwuid(info[0].As<Number>().Int32Value());
+
+  if (!user)
   {
     Error::New(env, "uid not found").ThrowAsJavaScriptException();
     return String::New(env, "");
   }
+
+  return String::New(env, user->pw_name);
 }
 
 Object Uid(const CallbackInfo &info)
 {
   auto env = info.Env();
 
-  struct passwd *user = NULL;
-
-  if ((info.Length() > 0) && info[0].IsString())
+  if (info.Length() < 1)
   {
-    auto utfname = std::string(info[0].As<String>()).c_str();
-    user = getpwnam(utfname);
-  }
-  else
-  {
-    Error::New(env, "you must supply the username").ThrowAsJavaScriptException();
-    return Object::New(env);
+    TypeError::New(env, "Wrong number of arguments").ThrowAsJavaScriptException();
+    return Array::New(env, 0);
   }
 
-  if (user)
+  if (!info[0].IsString())
   {
-    auto ret = Object::New(env);
-
-    ret["uid"] = Number::New(env, user->pw_uid);
-    ret["gid"] = Number::New(env, user->pw_gid);
-
-    return ret;
+    TypeError::New(env, "Argument must be a string").ThrowAsJavaScriptException();
+    return Array::New(env, 0);
   }
-  else
+
+  auto utfname = std::string(info[0].As<String>()).c_str();
+  auto user = getpwnam(utfname);
+
+  if (!user)
   {
     Error::New(env, "username not found").ThrowAsJavaScriptException();
     return Object::New(env);
   }
+
+  auto ret = Object::New(env);
+
+  ret["uid"] = Number::New(env, user->pw_uid);
+  ret["gid"] = Number::New(env, user->pw_gid);
+
+  return ret;
 }
 
 Object Init(Env env, Object exports)
