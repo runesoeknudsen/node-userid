@@ -1,5 +1,4 @@
 #include "userid.hh"
-#include <sys/types.h>
 
 #if !defined(_WIN32)
 #include <pwd.h>
