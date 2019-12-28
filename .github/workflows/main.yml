@@ -3,6 +3,61 @@ name: Build and Test
 on: [push]
 
 jobs:
+  coverage:
+    name: Coverage
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout latest code
+        uses: actions/checkout@v1
+
+      - name: Install Lcov
+        run: sudo apt-get install lcov -y
+
+      - name: "Debug: Node version"
+        run: node --version
+
+      - name: Build
+        run: npm install
+        env:
+          GENERATE_COVERAGE: "yes"
+
+      - name: "Debug: List post build files"
+        run: find * \( -path node_modules -o -path .git \) -prune -o -type f -print | tee /tmp/build.list
+
+      - name: Test Coverage
+        run: npm run coverage
+
+      - name: "Debug: List post Coverage files"
+        run: find * \( -path node_modules -o -path .git \) -prune -o -type f -print | tee /tmp/coverage.list
+
+      - name: "Debug: Coverage diff"
+        run: "diff -U 0 /tmp/build.list /tmp/coverage.list || :"
+
+      - name: Gcov
+        working-directory: build
+        run: gcov --demangled-names -o Release/obj.target/userid/src/userid.o ../src/userid.cc
+
+      - name: "Debug: List post Coverage files"
+        run: find * \( -path node_modules -o -path .git \) -prune -o -type f -print | tee /tmp/gcov.list
+
+      - name: "Debug: Gcov diff"
+        run: "diff -U 0 /tmp/coverage.list /tmp/gcov.list || :"
+
+      - name: Lcov Capture Gcov Data
+        run: lcov --capture --directory . --output-file coverage/cc.info
+      
+      - name: Extract userid.cc Coverage Data
+        run: lcov --extract coverage/cc.info '*userid.cc' --output-file coverage/cc.info
+      
+      - name: Combine userid.cc Coverage Data with JavaScript Coverage Data
+        run: lcov --add-tracefile coverage/cc.info --add-tracefile coverage/lcov.info --output-file coverage/lcov.info
+
+      - name: Coveralls GitHub Action
+        uses: coverallsapp/github-action@v1.0.1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
   build-test-publish:
     strategy:
       fail-fast: false

@@ -15,11 +15,21 @@
       "msvs_settings": {
         "VCCLCompilerTool": { "ExceptionHandling": 1 },
       },
+      "variables" : {
+        "generate_coverage": "<!(echo $GENERATE_COVERAGE)",
+      },
       "conditions": [
         ['OS=="mac"', {
             "cflags+": ["-fvisibility=hidden"],
             "xcode_settings": {
               "GCC_SYMBOLS_PRIVATE_EXTERN": "YES", # -fvisibility=hidden
+            },
+        }],
+        ['generate_coverage=="yes"', {
+            "cflags+": ["--coverage"],
+            "cflags_cc+": ["--coverage"],
+            "link_settings": {
+              "libraries+": ["-lgcov"],
             },
         }],
       ],
