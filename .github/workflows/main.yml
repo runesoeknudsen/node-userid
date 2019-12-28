@@ -10,9 +10,11 @@ jobs:
         os: [ubuntu-latest, macos-latest]
         node: [4, 5, 6, 7, 8, 9, 10, 11, 12, 13] # Does not work on pre 1.0 versions.
         exclude:
-          # excludes node 4 on macOS
+          # excludes node 4/5 on macOS
           - os: macos-latest
-            node: [4, 5] # ../node_modules/node-addon-api/src/node_api.cc:15:10: fatal error: 'algorithm' file not found
+            node: 4 # ../node_modules/node-addon-api/src/node_api.cc:15:10: fatal error: 'algorithm' file not found
+          - os: macos-latest
+            node: 5 # ../node_modules/node-addon-api/src/node_api.cc:15:10: fatal error: 'algorithm' file not found
 
     runs-on: ${{ matrix.os }}
 
