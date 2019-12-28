@@ -9,6 +9,8 @@ const execToString = command =>
 
 const execToVal = command => +execSync(command);
 
+// Simply test against current user's info
+
 const shellUsername = execToString("id -un");
 const shellGroupName = execToString("id -gn");
 const shellUid = execToVal("id -u");
