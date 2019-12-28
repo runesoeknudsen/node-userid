@@ -89,9 +89,7 @@ describe("userid", function() {
     });
 
     it("should throw with the wrong type of arguments", function() {
-      (() => userid.gids(0)).should.throw(
-        "Argument must be a string"
-      );
+      (() => userid.gids(0)).should.throw("Argument must be a string");
     });
 
     it("should throw when group can't be found", function() {
