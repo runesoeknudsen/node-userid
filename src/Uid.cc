@@ -30,7 +30,7 @@ struct passwd *getpwnam(const char *name);
 using namespace Napi;
 using namespace userid;
 
-Object Uid(const CallbackInfo &info)
+Object userid::Uid(const CallbackInfo &info)
 {
   auto env = info.Env();
 
