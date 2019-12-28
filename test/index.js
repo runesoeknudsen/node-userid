@@ -30,7 +30,7 @@ function testErrors(test, type, missing, error) {
   });
 
   it(`should throw when ${missing} can't be found`, () => {
-    (() => test(type == "string" ? "" : -1)).should.throw(error);
+    (() => test(type == "string" ? "" : -42)).should.throw(error);
   });
 }
 
