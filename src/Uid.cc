@@ -1,6 +1,6 @@
 #include "userid.hh"
 
-#if defined(__unix__) || (defined(__APPLE__) && defined(__MACH__))
+#if !defined(_WIN32)
 #include <pwd.h>
 #else
 // Mocks for Windows

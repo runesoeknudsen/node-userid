@@ -1,12 +1,12 @@
 #include "userid.hh"
 #include <sys/types.h>
 
-#if defined(__unix__) || (defined(__APPLE__) && defined(__MACH__))
+#if !defined(_WIN32)
 #include <pwd.h>
 #include <grp.h>
 
 // BSD needs unistd.h for getgrouplist function
-#if defined(BSD)
+#if defined(BSD) || defined(__APPLE__)
 #include <unistd.h>
 #endif
 
