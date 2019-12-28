@@ -13,63 +13,79 @@ var execToVal = function(command) {
 };
 
 describe("userid", function() {
-  it("ids", function() {
-    var username = execToString("id -u -n");
+  describe("userid.ids", function() {
+    it("should work like shell command", function() {
+      var username = execToString("id -u -n");
 
-    var shellUid = execToVal("id -u");
-    var shellGid = execToVal("id -g");
+      var shellUid = execToVal("id -u");
+      var shellGid = execToVal("id -g");
 
-    var libIds = userid.ids(username);
+      var libIds = userid.ids(username);
 
-    libIds.uid.should.equal(shellUid);
-    libIds.gid.should.equal(shellGid);
+      libIds.uid.should.equal(shellUid);
+      libIds.gid.should.equal(shellGid);
+    });
   });
 
-  it("uid", function() {
-    var username = execToString("id -u -n");
+  describe("userid.uid", function() {
+    it("should work like shell command", function() {
+      var username = execToString("id -u -n");
 
-    var shellUid = execToVal("id -u");
-    var libUid = userid.uid(username);
+      var shellUid = execToVal("id -u");
+      var libUid = userid.uid(username);
 
-    libUid.should.equal(shellUid);
+      libUid.should.equal(shellUid);
+    });
   });
 
-  it("username", function() {
-    var username = execToString("id -u -n");
+  describe("userid.username", function() {
+    it("should work like shell command", function() {
+      var username = execToString("id -u -n");
 
-    var shellUid = execToVal("id -u");
-    var libUsername = userid.username(shellUid);
+      var shellUid = execToVal("id -u");
+      var libUsername = userid.username(shellUid);
 
-    libUsername.should.equal(username);
+      libUsername.should.equal(username);
+    });
   });
 
-  it("gid", function() {
-    var shellGid = execToVal("id -g");
+  describe("userid.gid", function() {
+    it("should work like shell command", function() {
+      var shellGid = execToVal("id -g");
 
-    var groupName = execToString("getent group " + shellGid + " | cut -d: -f1");
-    var libGid = userid.gid(groupName);
+      var groupName = execToString(
+        "getent group " + shellGid + " | cut -d: -f1"
+      );
+      var libGid = userid.gid(groupName);
 
-    libGid.should.equal(shellGid);
+      libGid.should.equal(shellGid);
+    });
   });
 
-  it("groupname", function() {
-    var shellGid = execToVal("id -g");
+  describe("userid.groupname", function() {
+    it("should work like shell command", function() {
+      var shellGid = execToVal("id -g");
 
-    var groupName = execToString("getent group " + shellGid + " | cut -d: -f1");
-    var libGroupName = userid.groupname(shellGid);
+      var groupName = execToString(
+        "getent group " + shellGid + " | cut -d: -f1"
+      );
+      var libGroupName = userid.groupname(shellGid);
 
-    libGroupName.should.equal(groupName);
+      libGroupName.should.equal(groupName);
+    });
   });
 
-  it("gids", function() {
-    var username = execToString("id -u -n");
+  describe("userid.gids", function() {
+    it("should work like shell command", function() {
+      var username = execToString("id -u -n");
 
-    var shellGids = execToString("id -G").split(" "); //array of strings
-    var libGids = userid.gids(username);
+      var shellGids = execToString("id -G").split(" "); //array of strings
+      var libGids = userid.gids(username);
 
-    libGids.length.should.equal(shellGids.length);
+      libGids.length.should.equal(shellGids.length);
 
-    for (var x in shellGids)
-      (~libGids.indexOf(shellGids[x] >> 0)).should.not.equal(0); //~-1 = 0
+      for (var x in shellGids)
+        (~libGids.indexOf(shellGids[x] >> 0)).should.not.equal(0); //~-1 = 0
+    });
   });
 });
