@@ -7,7 +7,7 @@ Simple nodejs library with native bindings for getting uid and gid information.
 
 ## Installation
 
-```
+```bash
 $ npm install userid
 ```
 
