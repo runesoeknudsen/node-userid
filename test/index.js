@@ -73,9 +73,7 @@ describe("userid", function() {
     });
 
     it("should throw when gid can't be found", function() {
-      (() => userid.groupname(-1)).should.throw(
-        "gid not found"
-      );
+      (() => userid.groupname(-1)).should.throw("gid not found");
     });
   });
 
