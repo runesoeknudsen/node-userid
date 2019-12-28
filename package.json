@@ -1,6 +1,6 @@
 {
   "name": "userid",
-  "version": "1.0.0-beta.4",
+  "version": "1.0.0-beta.5",
   "description": "Lookup uid and gid information in node.js. Uses native POSIX bindings, not processes.",
   "main": "lib/userid.js",
   "types": "lib/userid.d.ts",
