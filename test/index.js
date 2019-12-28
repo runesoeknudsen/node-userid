@@ -16,7 +16,10 @@ var shellUsername = execToString("id -u -n");
 var shellGid = execToVal("id -g");
 var shellUid = execToVal("id -u");
 var shellGroupName = execToString(`getent group ${shellGid} | cut -d: -f1`);
-var shellGids = execToString("id -G").split(" ");
+var shellGids = execToString("id -G")
+  .split(" ")
+  .map(s => +s)
+  .sort();
 
 describe("userid", function() {
   describe("userid.ids", function() {
@@ -66,13 +69,9 @@ describe("userid", function() {
 
   describe("userid.gids", function() {
     it("should work like shell command", function() {
-      var shellGids = execToString("id -G").split(" "); //array of strings
-      var libGids = userid.gids(shellUsername);
+      var libGids = userid.gids(shellUsername).sort();
 
-      libGids.length.should.equal(shellGids.length);
-
-      for (var x in shellGids)
-        (~libGids.indexOf(shellGids[x] >> 0)).should.not.equal(0); //~-1 = 0
+      libGids.should.equal(shellGids);
     });
   });
 });
