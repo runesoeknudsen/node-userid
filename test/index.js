@@ -12,10 +12,10 @@ var execToVal = function(command) {
   return execSync(command) >> 0;
 };
 
-var shellUsername = execToString("id -u -n");
-var shellGid = execToVal("id -g");
+var shellUsername = execToString("id -un");
+var shellGroupName = execToString("id -gn");
 var shellUid = execToVal("id -u");
-var shellGroupName = execToString(`getent group ${shellGid} | cut -d: -f1`);
+var shellGid = execToVal("id -g");
 var shellGids = execToString("id -G")
   .split(" ")
   .map(s => +s)
