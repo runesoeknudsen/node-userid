@@ -2,12 +2,14 @@ const should = require("should");
 const userid = require("../lib/userid.js");
 const execSync = require("child_process").execSync;
 
+// Utility functions
+
 const execToString = command =>
   execSync(command)
     .toString()
     .replace("\n", "");
 
-const execToVal = command => +execSync(command);
+const execToVal = command => +execToString(command);
 
 // Simply test against current user's info
 
@@ -20,9 +22,19 @@ const shellGids = execToString("id -G")
   .map(s => +s)
   .sort();
 
+// TODO: programmatically find these values. But this seems to work fine.
 const nonExistentUidGid = -42;
 const nonExistentUserGroup = "";
 
+/**
+ * Helper function to exercise Error condition coverage tests
+ *
+ * @param {Function} test to run
+ * @param {"string" | "number"} type expected as argument
+ * @param {String} missing name of argument
+ * @param {String} error string when not found
+ * @param {Object} options Extra options
+ */
 function testErrors(test, type, missing, error, options = {}) {
   if (options.badValue === undefined)
     options.badValue = type == "string" ? 0 : "not a number";
