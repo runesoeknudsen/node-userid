@@ -94,10 +94,12 @@ Array Gids(const CallbackInfo &info)
 
   auto username = std::string(info[0].As<String>()).c_str();
 
+  errno = 0;
   struct passwd *pw = getpwnam(username);
 
   if (pw == NULL)
   {
+    // TODO: More verbose error message that includes errno
     Error::New(env, "getpwnam").ThrowAsJavaScriptException();
     return Array::New(env, 0);
   }
