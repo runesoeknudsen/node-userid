@@ -83,7 +83,7 @@ describe("userid", () => {
       test(shellGid).should.equal(shellGroupName);
     });
 
-    testErrors(test, "number", "gid", "gid not found")
+    testErrors(test, "number", "gid", "gid not found");
   });
 
   describe("userid.gids", () => {
@@ -95,6 +95,6 @@ describe("userid", () => {
         .should.deepEqual(shellGids);
     });
 
-    testErrors(test, "string", "user", "getpwnam")
+    testErrors(test, "string", "user", "getpwnam");
   });
 });
