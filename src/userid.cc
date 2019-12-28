@@ -32,7 +32,7 @@ String GroupName(const CallbackInfo &info)
 
   if (!info[0].IsNumber())
   {
-    TypeError::New(env, "Only number argument is supported for this function").ThrowAsJavaScriptException();
+    TypeError::New(env, "Argument must be a number").ThrowAsJavaScriptException();
     return String::New(env, "");
   }
 
@@ -61,7 +61,7 @@ Array Gids(const CallbackInfo &info)
 
   if (!info[0].IsString())
   {
-    TypeError::New(env, "Only string argument is supported for this function").ThrowAsJavaScriptException();
+    TypeError::New(env, "Argument must be a string").ThrowAsJavaScriptException();
     return Array::New(env, 0);
   }
 

@@ -68,7 +68,7 @@ describe("userid", function() {
 
     it("should throw with the wrong type of arguments", function() {
       (() => userid.groupname("not a number")).should.throw(
-        "Only number argument is supported for this function"
+        "Argument must be a number"
       );
     });
 
@@ -90,7 +90,7 @@ describe("userid", function() {
 
     it("should throw with the wrong type of arguments", function() {
       (() => userid.gids(0)).should.throw(
-        "Only string argument is supported for this function"
+        "Argument must be a string"
       );
     });
 
