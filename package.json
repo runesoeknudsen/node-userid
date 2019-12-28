@@ -9,7 +9,7 @@
     "lib/userid.d.ts",
     "src/userid.hh",
     "src/userid.cc",
-    "src/Ids.cc",
+    "src/Uid.cc",
     "src/Gid.cc",
     "src/Gids.cc",
     "src/UserName.cc",
