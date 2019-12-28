@@ -62,7 +62,7 @@ describe("userid", function() {
       libGroupName.should.equal(shellGroupName);
     });
 
-    it("should throw with the wrong of arguments", function() {
+    it("should throw with too few arguments", function() {
       (() => userid.groupname()).should.throw("Wrong number of arguments");
     });
   });
