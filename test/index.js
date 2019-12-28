@@ -40,10 +40,22 @@ describe("userid", function() {
   });
 
   describe("userid.username", function() {
-    it("should load username of specified uid", function() {
-      var libUsername = userid.username(shellUid);
+    const test = userid.username;
 
-      libUsername.should.equal(shellUsername);
+    it("should load username of specified uid", function() {
+      test(shellUid).should.equal(shellUsername);
+    });
+
+    it("should throw with too few arguments", function() {
+      (() => test()).should.throw("Wrong number of arguments");
+    });
+
+    it("should throw with the wrong type of arguments", function() {
+      (() => test("not a number")).should.throw("Argument must be a number");
+    });
+
+    it("should throw when uid can't be found", function() {
+      (() => test(-1)).should.throw("uid not found");
     });
   });
 
