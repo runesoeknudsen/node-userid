@@ -83,5 +83,19 @@ describe("userid", function() {
 
       libGids.should.deepEqual(shellGids);
     });
+
+    it("should throw with too few arguments", function() {
+      (() => userid.gids()).should.throw("Wrong number of arguments");
+    });
+
+    it("should throw with the wrong type of arguments", function() {
+      (() => userid.gids(0)).should.throw(
+        "Only string argument is supported for this function"
+      );
+    });
+
+    it("should throw when group can't be found", function() {
+      (() => userid.gids("")).should.throw("getpwnam");
+    });
   });
 });
