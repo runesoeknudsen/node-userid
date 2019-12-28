@@ -24,7 +24,7 @@ var shellGids = execToString("id -G")
 describe("userid", function() {
   describe("userid.ids", function() {
     const test = userid.ids;
-    
+
     it("should load current user's uid and gid", function() {
       var libIds = test(shellUsername);
 
@@ -46,10 +46,9 @@ describe("userid", function() {
   });
 
   describe("userid.uid", function() {
+    const test = userid.uid;
     it("should load current user's uid", function() {
-      var libUid = userid.uid(shellUsername);
-
-      libUid.should.equal(shellUid);
+      test(shellUsername).should.equal(shellUid);
     });
   });
 
@@ -85,7 +84,7 @@ describe("userid", function() {
     });
 
     it("should throw with the wrong type of arguments", function() {
-      (() => test(1)).should.throw("Argument must be a string");
+      (() => test(0)).should.throw("Argument must be a string");
     });
 
     it("should throw when gid can't be found", function() {
@@ -94,44 +93,44 @@ describe("userid", function() {
   });
 
   describe("userid.groupname", function() {
-    it("should load a group's name by gid", function() {
-      var libGroupName = userid.groupname(shellGid);
+    const test = userid.groupname;
 
-      libGroupName.should.equal(shellGroupName);
+    it("should load a group's name by gid", function() {
+      test(shellGid).should.equal(shellGroupName);
     });
 
     it("should throw with too few arguments", function() {
-      (() => userid.groupname()).should.throw("Wrong number of arguments");
+      (() => test()).should.throw("Wrong number of arguments");
     });
 
     it("should throw with the wrong type of arguments", function() {
-      (() => userid.groupname("not a number")).should.throw(
-        "Argument must be a number"
-      );
+      (() => test("not a number")).should.throw("Argument must be a number");
     });
 
     it("should throw when gid can't be found", function() {
-      (() => userid.groupname(-1)).should.throw("gid not found");
+      (() => test(-1)).should.throw("gid not found");
     });
   });
 
   describe("userid.gids", function() {
-    it("should work like shell command", function() {
-      var libGids = userid.gids(shellUsername).sort();
+    const test = userid.gids;
 
-      libGids.should.deepEqual(shellGids);
+    it("should work like shell command", function() {
+      test(shellUsername)
+        .sort()
+        .should.deepEqual(shellGids);
     });
 
     it("should throw with too few arguments", function() {
-      (() => userid.gids()).should.throw("Wrong number of arguments");
+      (() => test()).should.throw("Wrong number of arguments");
     });
 
     it("should throw with the wrong type of arguments", function() {
-      (() => userid.gids(0)).should.throw("Argument must be a string");
+      (() => test(0)).should.throw("Argument must be a string");
     });
 
     it("should throw when group can't be found", function() {
-      (() => userid.gids("")).should.throw("getpwnam");
+      (() => test("")).should.throw("getpwnam");
     });
   });
 });
