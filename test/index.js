@@ -60,10 +60,22 @@ describe("userid", function() {
   });
 
   describe("userid.gid", function() {
-    it("should load a group's gid by name", function() {
-      var libGid = userid.gid(shellGroupName);
+    const test = userid.gid;
 
-      libGid.should.equal(shellGid);
+    it("should load a group's gid by name", function() {
+      test(shellGroupName).should.equal(shellGid);
+    });
+
+    it("should throw with too few arguments", function() {
+      (() => test()).should.throw("Wrong number of arguments");
+    });
+
+    it("should throw with the wrong type of arguments", function() {
+      (() => test(1)).should.throw("Argument must be a string");
+    });
+
+    it("should throw when gid can't be found", function() {
+      (() => test("")).should.throw("groupname not found");
     });
   });
 
