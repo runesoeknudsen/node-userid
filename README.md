@@ -9,6 +9,8 @@ Simple nodejs library with native bindings for getting uid and gid information.
 
 ```bash
 $ npm install userid
+# Or, alternatively:
+$ npm install cinderblock/node-userid # Directly from github
 ```
 
 This relies on GNU `getgrname` and `getgrid`.
