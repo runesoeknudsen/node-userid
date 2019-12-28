@@ -71,7 +71,7 @@ describe("userid", function() {
     it("should work like shell command", function() {
       var libGids = userid.gids(shellUsername).sort();
 
-      libGids.should.equal(shellGids);
+      libGids.should.deepEqual(shellGids);
     });
   });
 });
