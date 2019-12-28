@@ -95,13 +95,14 @@ jobs:
     runs-on: ubuntu-latest
     needs: [ coverage, build-test ]
 
-    - name: Checkout latest code
-      uses: actions/checkout@v1
+    steps:
+      - name: Checkout latest code
+        uses: actions/checkout@v1
 
-    - name: Create .npmrc with Auth Token
-      run: echo '//registry.npmjs.org/:_authToken=${NPM_TOKEN}' > .npmrc
+      - name: Create .npmrc with Auth Token
+        run: echo '//registry.npmjs.org/:_authToken=${NPM_TOKEN}' > .npmrc
 
-    - name: Publish to npm
-      run: "npm publish || :"
-      env:
-        NPM_TOKEN: ${{ secrets.npm_token }}
+      - name: Publish to npm
+        run: "npm publish || :"
+        env:
+          NPM_TOKEN: ${{ secrets.npm_token }}
