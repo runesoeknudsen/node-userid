@@ -34,7 +34,8 @@ String GroupName(const CallbackInfo &info);
 Array Gids(const CallbackInfo &info);
 Number Gid(const CallbackInfo &info);
 
-Object Init(Env env, Object exports) {
+Object Init(Env env, Object exports)
+{
   exports.Set(String::New(env, "uid"), Function::New(env, Uid));
   exports.Set(String::New(env, "username"), Function::New(env, UserName));
   exports.Set(String::New(env, "gid"), Function::New(env, Gid));
@@ -50,21 +51,24 @@ String GroupName(const CallbackInfo &info)
 {
   auto env = info.Env();
 
-  if (info.Length() < 1) {
+  if (info.Length() < 1)
+  {
     TypeError::New(env, "Wrong number of arguments").ThrowAsJavaScriptException();
     return String::New(env, "");
   }
 
-  if (!info[0].IsNumber()) {
+  if (!info[0].IsNumber())
+  {
     TypeError::New(env, "Only number argument is supported for this function").ThrowAsJavaScriptException();
     return String::New(env, "");
   }
 
   int gid = info[0].As<Number>().Int32Value();
-  
+
   auto group = getgrgid(gid);
 
-  if (!group) {
+  if (!group)
+  {
     Error::New(env, "gid not found").ThrowAsJavaScriptException();
     return String::New(env, "");
   }
@@ -76,12 +80,14 @@ Array Gids(const CallbackInfo &info)
 {
   auto env = info.Env();
 
-  if (info.Length() < 1) {
+  if (info.Length() < 1)
+  {
     TypeError::New(env, "Wrong number of arguments").ThrowAsJavaScriptException();
     return Array::New(env, 0);
   }
 
-  if (!info[0].IsString()) {
+  if (!info[0].IsString())
+  {
     TypeError::New(env, "Only string argument is supported for this function").ThrowAsJavaScriptException();
     return Array::New(env, 0);
   }
@@ -90,7 +96,8 @@ Array Gids(const CallbackInfo &info)
 
   struct passwd *pw = getpwnam(username);
 
-  if (pw == NULL) {
+  if (pw == NULL)
+  {
     Error::New(env, "getpwnam").ThrowAsJavaScriptException();
     return Array::New(env, 0);
   }
@@ -106,7 +113,8 @@ Array Gids(const CallbackInfo &info)
   int foundGroups;
   int ngroups = 4;
 
-  do {
+  do
+  {
     // It is safe to delete NULL on first run
     delete[] groups;
 
@@ -115,7 +123,8 @@ Array Gids(const CallbackInfo &info)
 
     groups = new gidType[ngroups];
 
-    if (groups == NULL) {
+    if (groups == NULL)
+    {
       Error::New(env, "Malloc error generating list of groups").ThrowAsJavaScriptException();
       return Array::New(env, 0);
     }
@@ -128,7 +137,8 @@ Array Gids(const CallbackInfo &info)
 
   auto ret = Array::New(env, foundGroups);
 
-  for (int i = 0; i < ngroups; i++) {
+  for (int i = 0; i < ngroups; i++)
+  {
     // TODO: What happens when `napi_value`s are assigned to an array? Do their allocations need to stay around?
     ret[uint32_t(i)] = Number::New(env, groups[i]);
   }
@@ -144,19 +154,24 @@ Number Gid(const CallbackInfo &info)
 
   struct group *group = NULL;
 
-  if ((info.Length() > 0) && info[0].IsString()) {
+  if ((info.Length() > 0) && info[0].IsString())
+  {
     auto utfname = std::string(info[0].As<String>()).c_str();
 
     group = getgrnam(utfname);
-  } else {
+  }
+  else
+  {
     Error::New(env, "you must supply the groupname").ThrowAsJavaScriptException();
     return Number::New(env, 0);
   }
 
-
-  if (group) {
+  if (group)
+  {
     return Number::New(env, group->gr_gid);
-  } else {
+  }
+  else
+  {
     Error::New(env, "groupname not found").ThrowAsJavaScriptException();
     return Number::New(env, 0);
   }
@@ -168,17 +183,22 @@ String UserName(const CallbackInfo &info)
 
   struct passwd *user = NULL;
 
-  if ((info.Length() > 0) && info[0].IsNumber()) {
+  if ((info.Length() > 0) && info[0].IsNumber())
+  {
     user = getpwuid(info[0].As<Number>().Int32Value());
-  } else {
+  }
+  else
+  {
     Error::New(env, "you must supply the uid").ThrowAsJavaScriptException();
     return String::New(env, "");
   }
 
-
-  if (user) {
+  if (user)
+  {
     return String::New(env, user->pw_name);
-  } else {
+  }
+  else
+  {
     Error::New(env, "uid not found").ThrowAsJavaScriptException();
     return String::New(env, "");
   }
@@ -190,23 +210,28 @@ Object Uid(const CallbackInfo &info)
 
   struct passwd *user = NULL;
 
-  if ((info.Length() > 0) && info[0].IsString()) {
+  if ((info.Length() > 0) && info[0].IsString())
+  {
     auto utfname = std::string(info[0].As<String>()).c_str();
     user = getpwnam(utfname);
-  } else {
+  }
+  else
+  {
     Error::New(env, "you must supply the username").ThrowAsJavaScriptException();
     return Object::New(env);
   }
 
-
-  if (user) {
+  if (user)
+  {
     auto ret = Object::New(env);
 
     ret["uid"] = Number::New(env, user->pw_uid);
     ret["gid"] = Number::New(env, user->pw_gid);
 
     return ret;
-  } else {
+  }
+  else
+  {
     Error::New(env, "username not found").ThrowAsJavaScriptException();
     return Object::New(env);
   }
