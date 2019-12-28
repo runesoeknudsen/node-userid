@@ -19,5 +19,6 @@
       "passwd",
       "userid",
       "xcode"
-    ]
+    ],
+    "editor.formatOnSave": true
 }
