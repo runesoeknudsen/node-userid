@@ -60,65 +60,54 @@ function testErrors(test, type, missing, error, options = {}) {
 
 describe("userid", () => {
   describe("userid.ids", () => {
-    const test = userid.ids;
-
     it(`should load a user's uid [${shellUid}] and gid [${shellGid}] by username [${shellUsername}]`, () => {
-      const libIds = test(shellUsername);
+      const libIds = userid.ids(shellUsername);
 
       libIds.uid.should.equal(shellUid);
       libIds.gid.should.equal(shellGid);
     });
 
-    testErrors(test, "string", "username", "username not found");
+    testErrors(userid.ids, "string", "username", "username not found");
   });
 
   describe("userid.uid", () => {
-    const test = userid.uid;
-
     it(`should load user's uid [${shellUid}] by username [${shellUsername}]`, () => {
-      test(shellUsername).should.equal(shellUid);
+      userid.uid(shellUsername).should.equal(shellUid);
     });
   });
 
   describe("userid.username", () => {
-    const test = userid.username;
-
     it(`should load a username [${shellUsername}] by uid [${shellUid}]`, () => {
-      test(shellUid).should.equal(shellUsername);
+      userid.username(shellUid).should.equal(shellUsername);
     });
 
-    testErrors(test, "number", "uid", "uid not found");
+    testErrors(userid.username, "number", "uid", "uid not found");
   });
 
   describe("userid.gid", () => {
-    const test = userid.gid;
-
     it(`should load a group's gid [${shellGid}] by name [${shellGroupName}]`, () => {
-      test(shellGroupName).should.equal(shellGid);
+      userid.gid(shellGroupName).should.equal(shellGid);
     });
 
-    testErrors(test, "string", "groupname", "groupname not found");
+    testErrors(userid.gid, "string", "groupname", "groupname not found");
   });
 
   describe("userid.groupname", () => {
-    const test = userid.groupname;
-
     it(`should load a group's name [${shellGroupName}] by gid [${shellGid}]`, () => {
-      test(shellGid).should.equal(shellGroupName);
+      userid.groupname(shellGid).should.equal(shellGroupName);
     });
 
-    testErrors(test, "number", "gid", "gid not found");
+    testErrors(userid.groupname, "number", "gid", "gid not found");
   });
 
   describe("userid.gids", () => {
-    const test = userid.gids;
-
     it(`should load a list of gids [${shellGids}] by username [${shellUsername}]`, () => {
-      test(shellUsername)
+      userid
+        .gids(shellUsername)
         .sort()
         .should.deepEqual(shellGids);
     });
 
-    testErrors(test, "string", "user", "getpwnam");
+    testErrors(userid.gids, "string", "user", "getpwnam");
   });
 });
