@@ -50,10 +50,21 @@ Since Jen has not responded to any attempts at contact, I requested that Npm tra
 Version 1.0.0 switched to N-API, the forward compatible interface that should be, all around, much nicer moving forward.
 It also signals the change to using Github Actions to run all our full coverage tests on all supported platforms.
 
-## License, unless otherwise specified
+## License
 
-Copyright (C) 2019 Cameron Tacklind <cameron@tacklind.com>
-Copyright (C) 2013 Jen Andre <jandre@gmail.com>
+The license, when the package was created, had some mix of GLPv3 and Public Domain.
+
+Since the main source code has always been Public Domain, I'm going to keep it that way.
+I've also explicitly extended it to the rest of the main (published) source code.
+
+Event though Jen's before last commit (ba665c45d958982ff5aa0d482741a2955a4de8c4) changed the license in one location to MIT,
+the tests, build files, and other scripts (especially those by other contributors) were added under the GPLv3.
+I'm therefore inclined to think it's better to not hold to that final license change.
+
+Going forward, all published source code (the part that you use as a user of this package) will be all **Public Domain**.
+The rest of this package will stay **GPLv3**.
+
+© 2019 Cameron Tacklind <cameron@tacklind.com>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
