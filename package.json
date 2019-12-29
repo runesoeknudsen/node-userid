@@ -37,7 +37,7 @@
   "contributors": [
     "Cameron Tacklind <cameron@tacklind.com>"
   ],
-  "license": "GPL-3.0",
+  "license": "Public Domain",
   "gypfile": true,
   "dependencies": {
     "bindings": "^1.5.0",
