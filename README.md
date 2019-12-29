@@ -3,6 +3,7 @@
 Simple nodejs library with native bindings for getting uid and gid information.
 
 [![](https://github.com/cinderblock/node-userid/workflows/Main/badge.svg)](https://github.com/cinderblock/node-userid/actions)
+[![](https://github.com/cinderblock/node-userid/workflows/Test%20All%20Versions/badge.svg)](https://github.com/cinderblock/node-userid/actions)
 [![Coverage Status](https://coveralls.io/repos/github/cinderblock/node-userid/badge.svg?branch=master)](https://coveralls.io/github/cinderblock/node-userid?branch=master)
 
 ## Installation
