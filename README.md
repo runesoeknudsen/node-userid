@@ -39,6 +39,17 @@ console.log("gid 0 name is:", userid.groupname(0));
 
 <!-- TODO: Full Docs -->
 
+## History
+
+This package was originally created by [Jen Andre](https://github.com/jandre/node-userid) <jandre@gmail.com>.
+
+In 2019, it was, unfortunately, missing updates that are required to run on the latest versions of Node.js.
+
+Since Jen has not responded to any attempts at contact, I requested that Npm transfer the package so that I might keep it maintained.
+
+Version 1.0.0 switched to N-API, the forward compatible interface that should be, all around, much nicer moving forward.
+It also signals the change to using Github Actions to run all our full coverage tests on all supported platforms.
+
 ## License, unless otherwise specified
 
 Copyright (C) 2019 Cameron Tacklind <cameron@tacklind.com>
