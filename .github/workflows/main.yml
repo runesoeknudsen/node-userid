@@ -53,6 +53,7 @@ jobs:
       - name: Build
         run: npm install
         env:
+          # Turns on Gcov instrumentation in compiled binaries
           GENERATE_COVERAGE: "yes"
 
       - name: "Debug: List post build files"
@@ -67,8 +68,9 @@ jobs:
       - name: "Debug: Coverage diff"
         run: "diff -U 0 /tmp/build.list /tmp/coverage.list || :"
 
-      - name: Gcov
+      - name: Gcov # TODO: What exactly is this step doing?
         working-directory: build
+        # TODO: Why do these args not seem to matter...
         run: gcov -o Release/obj.target/userid/src/userid.o ../src/userid.cc
 
       - name: "Debug: List post Coverage files"
