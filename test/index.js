@@ -11,17 +11,18 @@ const execToString = command =>
     .toString()
     .replace("\n", "");
 
-const execToVal = command => +execToString(command);
-
 // Simply test against current user's info
 
 const shellUsername = execToString("id -un");
 const shellGroupName = execToString("id -gn");
-const shellUid = execToVal("id -u");
-const shellGid = execToVal("id -g");
+
+const shellUid = Number(execToString("id -u"));
+const shellGid = Number(execToString("id -g"));
+
+// Get a nice list
 const shellGids = execToString("id -G")
   .split(" ")
-  .map(s => +s)
+  .map(s => Number(s))
   .sort();
 
 // TODO: programmatically find these values. But this seems to work fine.
