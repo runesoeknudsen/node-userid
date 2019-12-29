@@ -75,7 +75,7 @@ describe("userid", () => {
   describe("userid.ids", testIds(userid.ids));
 
   if (process.env.MOCHA_NATIVE_API_TEST) {
-    describe("userid.uid", testIds(userid.uid));
+    describe("userid.uid (matches userid.ids)", testIds(userid.uid));
   } else {
     describe("userid.uid", () => {
       it(`should load user's uid [${shellUid}] by username [${shellUsername}]`, () => {
