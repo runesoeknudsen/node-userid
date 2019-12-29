@@ -59,6 +59,7 @@ jobs:
         run: npm test
         env:
           MOCHA_IMPORT_OVERRIDE: ../build/Release/userid.node
+          MOCHA_NATIVE_API_TEST: true
 
   coverage:
     needs: [test-native-api, install-and-run-from-git]
