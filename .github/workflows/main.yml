@@ -18,7 +18,7 @@ jobs:
 
     runs-on: ${{ matrix.os }}
 
-    name: Test with Node ${{ matrix.node }} on ${{ matrix.os }}
+    name: Test - Node ${{ matrix.node }} on ${{ matrix.os }}
 
     steps:
       - name: Checkout latest code
@@ -41,7 +41,7 @@ jobs:
         if: matrix.node >= 6
 
   install-from-git:
-    name: Install from Github Test
+    name: Test - Install from Github
 
     runs-on: ubuntu-latest
 
@@ -73,7 +73,7 @@ jobs:
           MOCHA_IMPORT_OVERRIDE: userid
 
   coverage:
-    name: Test Coverage
+    name: Generate - Coverage Reports
     runs-on: ubuntu-latest
     needs: [test-matrix, install-from-git]
 
@@ -129,7 +129,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
   publish:
-    name: Publish Master
+    name: Publish - Master
     if: github.event_name == 'push' && github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     needs: [coverage, test-matrix, install-from-git]
