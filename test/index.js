@@ -60,23 +60,29 @@ function testErrors(test, type, missing, error, options = {}) {
   });
 }
 
+const testIds = test => () => {
+  it(`should load a user's uid [${shellUid}] and gid [${shellGid}] by username [${shellUsername}]`, () => {
+    const libIds = userid.ids(shellUsername);
+
+    libIds.uid.should.equal(shellUid);
+    libIds.gid.should.equal(shellGid);
+  });
+
+  testErrors(userid.ids, "string", "username", "username not found");
+};
+
 describe("userid", () => {
-  describe("userid.ids", () => {
-    it(`should load a user's uid [${shellUid}] and gid [${shellGid}] by username [${shellUsername}]`, () => {
-      const libIds = userid.ids(shellUsername);
+  describe("userid.ids", testIds(userid.ids));
 
-      libIds.uid.should.equal(shellUid);
-      libIds.gid.should.equal(shellGid);
+  if (process.env.MOCHA_NATIVE_API_TEST) {
+    describe("userid.uid (matches userid.ids)", testIds(userid.uid));
+  } else {
+    describe("userid.uid", () => {
+      it(`should load user's uid [${shellUid}] by username [${shellUsername}]`, () => {
+        userid.uid(shellUsername).should.equal(shellUid);
+      });
     });
-
-    testErrors(userid.ids, "string", "username", "username not found");
-  });
-
-  describe("userid.uid", () => {
-    it(`should load user's uid [${shellUid}] by username [${shellUsername}]`, () => {
-      userid.uid(shellUsername).should.equal(shellUid);
-    });
-  });
+  }
 
   describe("userid.username", () => {
     it(`should load a username [${shellUsername}] by uid [${shellUid}]`, () => {

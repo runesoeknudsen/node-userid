@@ -38,10 +38,35 @@ jobs:
         env:
           MOCHA_IMPORT_OVERRIDE: userid
 
-  coverage:
-    name: Generate - Coverage Reports
-    runs-on: ubuntu-latest
+  test-native-api:
     needs: [install-and-run-from-git]
+
+    name: Test - Native API Stability
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout latest code
+        uses: actions/checkout@v1
+
+      - name: Install Node dependencies without building locally
+        run: npm install
+
+      - name: "Debug: List post build files"
+        run: find * \( -path node_modules -o -path .git \) -print -prune -o -type f -print | tee /tmp/build.list
+
+      - name: Run Tests with Prepared Git Dependency
+        run: npm test
+        env:
+          MOCHA_IMPORT_OVERRIDE: ../build/Release/userid.node
+          MOCHA_NATIVE_API_TEST: true
+
+  coverage:
+    needs: [test-native-api, install-and-run-from-git]
+
+    name: Generate - Coverage Reports
+
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout latest code
