@@ -14,6 +14,10 @@ Object Init(Env env, Object exports)
   exports["username"] = Function::New(env, &UserName);
   exports["groupname"] = Function::New(env, &GroupName);
 
+  // Original native module used the "uid" name but the JavaScript renamed it to "ids"
+  // This gets replaced in the JavaScript API by a different function
+  exports["uid"] = exports["ids"];
+
   return exports;
 }
 
