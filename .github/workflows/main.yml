@@ -117,10 +117,10 @@ jobs:
       - name: Lcov Capture Gcov Data
         run: lcov --capture --directory . --output-file coverage/cc.info
 
-      - name: Extract userid.cc Coverage Data
+      - name: Extract Our C++ Sources' Coverage Data
         run: lcov --extract coverage/cc.info '*.cc' --output-file coverage/cc.info
 
-      - name: Combine userid.cc Coverage Data with JavaScript Coverage Data
+      - name: Combine Our C++ Sources' Coverage Data with JavaScript's Coverage Data
         run: lcov --add-tracefile coverage/cc.info --add-tracefile coverage/lcov.info --output-file coverage/lcov.info
 
       - name: Coveralls GitHub Action
