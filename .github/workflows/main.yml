@@ -15,6 +15,9 @@ jobs:
       - name: Install Node dependencies without building locally
         run: npm install --ignore-scripts
 
+      - name: "Debug: List post build files"
+        run: find * \( -path node_modules/\* -o -path .git \) -prune -o -type f -print | tee /tmp/build.list
+
       # Prepare Test Environment
 
       - name: Create Dummy Package.json
