@@ -30,7 +30,8 @@ const nonExistentUidGid = -42;
 const nonExistentUserGroup = "";
 
 /**
- * Helper function to exercise Error condition coverage tests
+ * Helper function to exercise Error condition coverage tests.
+ * Since all the functions error in pretty much the same way, we can take advantage of this.
  *
  * @param {Function} test to run
  * @param {"string" | "number"} type expected as argument
