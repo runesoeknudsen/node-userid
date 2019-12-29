@@ -123,6 +123,9 @@ jobs:
       - name: Combine Our C++ Sources' Coverage Data with JavaScript's Coverage Data
         run: lcov --add-tracefile coverage/cc.info --add-tracefile coverage/lcov.info --output-file coverage/lcov.info
 
+      - name: "Debug: Print coverage report"
+        run: lcov --list coverage/lcov.info
+
       - name: Coveralls GitHub Action
         uses: coverallsapp/github-action@v1.0.1
         with:
