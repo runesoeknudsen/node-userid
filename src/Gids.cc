@@ -8,7 +8,7 @@
 #include <grp.h>
 
 // BSD needs unistd.h for getgrouplist function
-#if defined(BSD) || defined(__APPLE__)
+#if defined(BSD) || defined(__FreeBSD__) || defined(__APPLE__)
 #include <unistd.h>
 #endif
 
